@@ -125,7 +125,7 @@ class MessagesStream extends StatelessWidget {
             ),
           );
         }
-        final messages = snapshot.data.documents;
+        final messages = snapshot.data.documents.reversed;
         List<MessageBubble> messageBubbles = [];
         for (var message in messages) {
           final messageText = message.data['text'];
@@ -142,6 +142,7 @@ class MessagesStream extends StatelessWidget {
         }
         return Expanded(
           child: ListView(
+            reverse: true,
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
             children: messageBubbles,
           ),
@@ -163,17 +164,23 @@ class MessageBubble extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             sender,
             style: TextStyle(fontSize: 12.0, color: Colors.black54),
           ),
           Material(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30)),
+            borderRadius: isMe
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))
+                : BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30)),
             elevation: 6.0,
             color: isMe ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
@@ -182,7 +189,7 @@ class MessageBubble extends StatelessWidget {
                 '$text',
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.white,
+                  color: isMe ? Colors.white : Colors.black54,
                 ),
               ),
             ),
